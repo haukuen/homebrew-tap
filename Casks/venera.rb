@@ -11,8 +11,6 @@ cask "venera" do
   app "Venera.app"
 
   zap trash: [
-    "~/.local/share/venera",
-    "~/Library/Preferences/com.venera.app.plist",
-    "~/Library/Saved Application State/com.venera.app.savedState",
+    "~/Library/Containers/com.github.wgh136.venera",
   ]
 end
