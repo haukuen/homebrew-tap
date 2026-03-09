@@ -1,0 +1,61 @@
+name: Bump Casks
+
+on:
+  schedule:
+    - cron: "20 */8 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: bump-casks
+  cancel-in-progress: false
+
+jobs:
+  bump:
+    if: github.repository == 'haukuen/homebrew-tap'
+    runs-on: macos-latest
+
+    env:
+      HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}
+      HOMEBREW_DEVELOPER: "1"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}
+
+      - name: Validate required secret
+        run: |
+          if [ -z "${HOMEBREW_GITHUB_API_TOKEN}" ]; then
+            echo "Missing HOMEBREW_GITHUB_API_TOKEN secret."
+            exit 1
+          fi
+
+      - name: Link workspace as tap
+        run: |
+          BREW_REPOSITORY="$(brew --repository)"
+          TAP_PARENT="${BREW_REPOSITORY}/Library/Taps/haukuen"
+          TAP_PATH="${TAP_PARENT}/homebrew-tap"
+
+          mkdir -p "${TAP_PARENT}"
+          rm -rf "${TAP_PATH}"
+          ln -s "${GITHUB_WORKSPACE}" "${TAP_PATH}"
+
+      - name: Update Homebrew metadata
+        run: brew update
+
+      - name: Audit current tap
+        run: brew audit --cask --strict --tap haukuen/tap
+
+      - name: Show available updates
+        run: |
+          brew livecheck --quiet --newer-only --json --cask --tap haukuen/tap
+
+      - name: Open bump pull requests
+        run: |
+          brew bump --no-fork --open-pr --casks --tap haukuen/tap
