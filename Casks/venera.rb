@@ -1,11 +1,11 @@
 cask "venera" do
-  version "1.6.3,163"
-  sha256 "f814fc4ae2d60a3abdb4e08de22e2cce49d2f63e8fdac842c93a2c9eae3425b3"
+  version "1.6.4,164"
+  sha256 "89eeedc529e363da0c674316c2d3aa7fa04befb61a66b5702917b10943dc1daa"
 
-  url "https://github.com/venera-app/venera/releases/download/v#{version.csv.first}/venera-#{version.csv.first}+#{version.csv.second}.dmg"
+  url "https://github.com/haukuen/venera/releases/download/v#{version.csv.first}/venera-#{version.csv.first}+#{version.csv.second}.dmg"
   name "Venera"
   desc "Comic reader that supports reading local and network comics"
-  homepage "https://github.com/venera-app/venera"
+  homepage "https://github.com/haukuen/venera"
 
   livecheck do
     url :url
@@ -25,5 +25,8 @@ cask "venera" do
 
   app "Venera.app"
 
-  zap trash: "~/Library/Containers/com.github.wgh136.venera"
+  zap trash: [
+    "~/Library/Application Support/venera",
+    "~/Library/Caches/io.github.haukuen.venera",
+  ]
 end
