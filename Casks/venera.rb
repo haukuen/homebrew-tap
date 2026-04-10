@@ -26,7 +26,9 @@ cask "venera" do
   app "Venera.app"
 
   zap trash: [
-    "~/Library/Application Support/venera",
+    "~/Library/Application Scripts/io.github.haukuen.venera",
+    "~/Library/Application Support/io.github.haukuen.venera",
     "~/Library/Caches/io.github.haukuen.venera",
+    "~/Library/Containers/io.github.haukuen.venera",
   ]
 end
