@@ -7,7 +7,6 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
 
 concurrency:
   group: bump-casks
@@ -27,6 +26,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: main
           token: ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}
 
       - name: Validate required secret
@@ -61,6 +61,37 @@ jobs:
         run: |
           brew livecheck --quiet --newer-only --json --cask --tap haukuen/tap
 
-      - name: Open bump pull requests
+      - name: Commit bumps directly to main
         run: |
-          brew bump --no-fork --open-pr --casks --tap haukuen/tap
+          set -euo pipefail
+
+          updates_json="$(brew livecheck --quiet --newer-only --json --cask --tap haukuen/tap)"
+          echo "${updates_json}"
+
+          if [ "${updates_json}" = "[]" ]; then
+            echo "No updates found."
+            exit 0
+          fi
+
+          while IFS=$'\t' read -r cask version; do
+            [ -n "${cask}" ] || continue
+
+            brew bump-cask-pr \
+              --write-only \
+              --commit \
+              --no-fork \
+              --version="${version}" \
+              "${cask}"
+          done < <(
+            ruby -rjson -e '
+              JSON.parse(STDIN.read).each do |item|
+                cask = item["cask"]
+                version = item.dig("version", "latest")
+                next if cask.to_s.empty? || version.to_s.empty?
+
+                puts "#{cask}\t#{version}"
+              end
+            ' <<<"${updates_json}"
+          )
+
+          git push origin HEAD:main
