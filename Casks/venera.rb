@@ -1,6 +1,6 @@
 cask "venera" do
-  version "1.10.0,200"
-  sha256 "fcfc35b2c424d38dac6a1d829e7c814cc5a435854d74264543ce7b0d768a3009"
+  version "1.11.0,201"
+  sha256 "82083fa0c0dabdd44619835fddd1521f40cc4167d2609494af41a3e186739795"
 
   url "https://github.com/haukuen/venera/releases/download/v#{version.csv.first}/venera-#{version.csv.first}+#{version.csv.second}.dmg"
   name "Venera"
@@ -22,6 +22,8 @@ cask "venera" do
       "#{match[1]},#{asset_match[1]}"
     end
   end
+
+  depends_on :macos
 
   app "Venera.app"
 
