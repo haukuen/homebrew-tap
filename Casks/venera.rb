@@ -1,6 +1,6 @@
 cask "venera" do
-  version "1.12.0,203"
-  sha256 "d8ac0e4e2f048a9ac234737e3ee21c08221b1112fab36a2e23d6399e6d6b5deb"
+  version "1.13.0,204"
+  sha256 "542c756b773284eaf691e5241006ba790b1cb070d4f74add828403a9bc6f90a7"
 
   url "https://github.com/haukuen/venera/releases/download/v#{version.csv.first}/venera-#{version.csv.first}+#{version.csv.second}.dmg"
   name "Venera"
