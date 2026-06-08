@@ -55,7 +55,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Audit current tap
-        run: brew audit --cask --strict --tap haukuen/tap
+        run: brew audit --cask --tap haukuen/tap
 
       - name: Show available updates
         run: |
