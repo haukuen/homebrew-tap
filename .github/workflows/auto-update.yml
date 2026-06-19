@@ -48,6 +48,9 @@ jobs:
       - name: Update Homebrew metadata
         run: brew update
 
+      - name: Trust tap
+        run: brew trust haukuen/tap
+
       - name: Configure git identity
         run: |
           git config user.name "github-actions[bot]"
